@@ -1,78 +1,118 @@
 # Snippet Safe - API REST
 
-API REST segura para la gestión de fragmentos de código (snippets) privados, construida con Node.js, Express y MongoDB.
+API para guardar snippets de código de forma privada. Hecha con Node.js, Express y MongoDB.
 
 ## Características
 
-- **Autenticación JWT**: Seguridad robusta para el manejo de sesiones.
-- **Muro de Privacidad**: Los usuarios solo pueden ver, editar y borrar sus propios snippets.
-- **Validación de Datos**: Entradas saneadas con `express-validator`.
-- **Manejo de Errores Global**: Respuestas en formato JSON consistentes.
-- **Relaciones con MongoDB**: Implementación de 'Mongoose References' para vincular usuarios y snippets.
+- Autenticación con JWT
+- Cada usuario solo ve/edita/borra sus propios snippets
+- Validación con `express-validator`
+- Manejo de errores global en JSON
 
-## Requisitos Previos
+## Requisitos
 
 - Node.js
 - MongoDB
 
-##  Instalación
+## Instalación
 
-1. Clona el repositorio:
-   bash
-   git clone <https://github.com/MunGZar/Electiva-lll---backend>
-   cd taller1-backend
-   
+git clone <https://github.com/MunGZar/Electiva-lll---backend>
+cd taller1-backend
+npm install
 
-2. Instala las dependencias:
-   npm install
-   
+Crear archivo `.env`:
 
-3. Configura las variables de entorno:
-   Crea un archivo (.env) en la raíz del proyecto y añade lo siguiente:
-
-   PORT=3000
-   MONGODB_URI=tu_cadena_de_conexion_a_mongodb
-   JWT_SECRET=una_llave_secreta_muy_segura
-   JWT_EXPIRES_IN=30d
-   
+PORT=3000
+MONGODB_URI=la url que nos da mongodb atlas
+JWT_SECRET=tu_llave_secreta
+JWT_EXPIRES_IN=30d
 
 ## Ejecución
 
-**Modo Desarrollo (con nodemon):**
+npm run dev    # desarrollo
+npm start      # producción
 
-npm run dev
+## Endpoints
+
+Base URL: http://localhost:3000/api/v1
+
+### Auth
+
+**Registro** — POST /api/v1/auth/register
+```json
+{
+  "name": "Jose",
+  "email": "jose@correo.com",
+  "password": "123456"
+}
+```
+
+**Login** — POST /api/v1/auth/login
+```json
+{
+  "email": "jose@correo.com",
+  "password": "123456"
+}
+```
+
+Ambos devuelven:
+```json
+{ "success": true, "token": "eyJhbG..." }
+```
+
+### Snippets
+
+Todas requieren header: "Authorization: Bearer <TOKEN>"
+
+**Crear** — `POST /api/v1/snippets
+```json
+{
+  "title": "Hola Mundo",
+  "language": "python",
+  "code": "print('hola')",
+  "tags": ["python", "basico"]
+}
+```
+`tags` es opcional.
+
+**Listar los mios** —GET /api/v1/snippets
+
+No lleva body.
+
+**Editar** — PUT /api/v1/snippets/:id
+```json
+{
+  "title": "Titulo editado",
+  "language": "javascript",
+  "code": "console.log('editado')",
+  "tags": ["js"]
+}
+```
+
+**Borrar** — DELETE /api/v1/snippets/:id
+
+No lleva body.
+
+## Errores comunes
 
 
-**Modo Producción:**
 
-npm start
+400 = Validación fallida (campos faltantes, password corta, etc) 
+401 = redenciales inválidas - Sin token - in permiso 
+404 = nippet no encontrado
 
+## Orden para probar
 
-## Endpoints (v1)
+1. Registrarse (POST /auth/register)
+2. Login (POST /auth/login) → copiar token
+3. Crear snippet (POST /snippets)
+4. Listar (GET /snippets)
+5. Editar (PUT /snippets/:id)
+6. Borrar (DELETE /snippets/:id)
 
-### Autenticación
+## Tecnologías
 
-
-POST  `/api/v1/auth/register` Registrar un nuevo usuario 
-POST `/api/v1/auth/login` Iniciar sesión y obtener el token JWT 
-
-### Snippets (Protegidos por Token)
-*Requieren el Header (Authorization: Bearer <TOKEN>)*
-
-
-
-POST `/api/v1/snippets` Crear un nuevo snippet 
-GET  `/api/v1/snippets` Listar solo mis snippets 
-pUT `/api/v1/snippets/:id` Editar un snippet propio 
-DELETE  `/api/v1/snippets/:id` Borrar un snippet propio 
-
-## Privacidad Garantizada
-
-El sistema utiliza el ID del usuario extraído directamente del Token JWT para todas las operaciones de base de datos. Esto garantiza que un usuario nunca pueda manipular el recurso de otro, incluso si conoce el ID.
-
-## Tecnologías Utilizadas
-
-- **Backend**: Express.js
-- **Base de Datos**: MongoDB & Mongoose
-- **Seguridad**: JSON Web Token (JWT) & Bcryptjs
-- **Validación**: Express-validator
+- Express.js
+- MongoDB + Mongoose
+- JWT + Bcryptjs
+- Express-validator
