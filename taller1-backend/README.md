@@ -110,6 +110,16 @@ No lleva body.
 5. Editar (PUT /snippets/:id)
 6. Borrar (DELETE /snippets/:id)
 
+## Prueba de Fuego (Seguridad)
+
+1. Registrar User A y User B
+2. Crear un snippet con token de User A
+3. Intentar borrarlo con token de User B
+4. El server responde 401 - "No tiene permiso para borrar este snippet"
+5. El snippet de A sigue intacto
+
+Resultado: correcto — un usuario no puede tocar los snippets de otro.
+
 ## Tecnologías
 
 - Express.js
