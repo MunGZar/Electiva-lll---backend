@@ -1,12 +1,13 @@
-# Snippet Safe - API REST
+## TRABAJO 1 - ELECTIVA III
+## INTEGRANTES:  JHARDIHER JOSE GIRALDO MUÑOZ - STIVEN MORA BARCENAS
 
-API para guardar snippets de código de forma privada. Hecha con Node.js, Express y MongoDB.
+API para guardar snippets de código de forma privada y pruba de seguridad con token de otro usuario. Hecha con Node.js, Express y MongoDBATLAS.
 
 ## Características
 
 - Autenticación con JWT
 - Cada usuario solo ve/edita/borra sus propios snippets
-- Validación con `express-validator`
+- Validación con express-validator
 - Manejo de errores global en JSON
 
 ## Requisitos
